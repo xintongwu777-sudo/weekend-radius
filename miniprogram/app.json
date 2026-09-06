@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/preferences/index",
+    "pages/recommendations/index",
+    "pages/activity-detail/index",
+    "pages/itinerary/index",
+    "pages/saved/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F6F1E8",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "周末半径",
+    "backgroundColor": "#F6F1E8",
+    "backgroundTextStyle": "dark"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于计算广州活动距离，并推荐附近地点"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

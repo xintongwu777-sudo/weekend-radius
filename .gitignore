@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# WeChat DevTools local settings
+project.private.config.json
+.idea/
+.vscode/
+
+# CloudBase / local temporary files
+.tcb_tmp/
+*.log
+
+# Build and package outputs
+dist/
+miniprogram_npm/
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db

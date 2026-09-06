@@ -1,0 +1,112 @@
+<view class="page preferences-page">
+  <text class="eyebrow">PLAN YOUR WEEKEND</text>
+  <view class="page-title">先选一下，<text class="title-break">今天想怎么过</text></view>
+  <text class="page-subtitle">不用想得太细，几个选择就够了。</text>
+
+  <view class="form-section">
+    <text class="section-title">哪天有空？</text>
+    <view class="day-grid">
+      <view wx:for="{{dayCards}}" wx:key="value" class="day-card {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectDay">
+        <text class="day-label">{{item.label}}</text><text class="day-date">{{item.date}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">几点到几点？</text>
+    <view class="time-wheel-row">
+      <view class="time-wheel-card">
+        <text class="time-wheel-label">开始</text>
+        <view class="time-wheel-wrap">
+          <picker-view class="time-wheel" value="{{startPickerValue}}" indicator-style="height: 72rpx;" bindchange="changeStartTime">
+            <picker-view-column><view wx:for="{{hours}}" wx:key="*this" class="wheel-item">{{item}}</view></picker-view-column>
+            <picker-view-column><view wx:for="{{minutes}}" wx:key="*this" class="wheel-item">{{item}}</view></picker-view-column>
+          </picker-view>
+          <text class="wheel-colon">:</text>
+        </view>
+      </view>
+
+      <text class="time-dash">—</text>
+
+      <view class="time-wheel-card">
+        <text class="time-wheel-label">结束</text>
+        <view class="time-wheel-wrap">
+          <picker-view class="time-wheel" value="{{endPickerValue}}" indicator-style="height: 72rpx;" bindchange="changeEndTime">
+            <picker-view-column><view wx:for="{{hours}}" wx:key="*this" class="wheel-item">{{item}}</view></picker-view-column>
+            <picker-view-column><view wx:for="{{minutes}}" wx:key="*this" class="wheel-item">{{item}}</view></picker-view-column>
+          </picker-view>
+          <text class="wheel-colon">:</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">这次最多想花多少？</text>
+    <view class="budget-panel {{budgetMode === 'slider' ? 'active' : ''}}" data-value="slider" bindtap="selectBudgetMode">
+      <view class="budget-value-row"><text>常用预算</text><text class="budget-value">¥{{budgetValue}}</text></view>
+      <slider min="0" max="500" step="10" value="{{budgetValue}}" activeColor="#E9663D" backgroundColor="#DED8CE" block-color="#1F2A24" block-size="24" bindchanging="changeBudget" bindchange="changeBudget" />
+      <view class="budget-scale"><text>¥0 · 免费优先</text><text>¥500</text></view>
+    </view>
+    <view class="custom-budget-row {{budgetMode === 'custom' ? 'active' : ''}}" data-value="custom" bindtap="selectBudgetMode">
+      <view><text class="custom-budget-title">其他预算</text><text class="custom-budget-copy">超过 ¥500，或输入任意金额</text></view>
+      <view class="custom-budget-control" data-value="custom" catchtap="selectBudgetMode"><text class="currency">¥</text><input class="budget-input" type="number" maxlength="8" value="{{customBudget}}" placeholder="例如 3000" bindinput="changeCustomBudget" focus="{{budgetMode === 'custom'}}" /></view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">这次想怎么选？</text>
+    <text class="mode-helper">随机惊喜会跳过兴趣，但仍会遵守预算、距离、时间和避雷项。</text>
+    <view class="recommendation-mode-grid">
+      <view wx:for="{{recommendationModes}}" wx:key="value" class="recommendation-mode-card {{recommendationMode === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectRecommendationMode">
+        <view><text class="recommendation-mode-title">{{item.label}}</text><text class="recommendation-mode-copy">{{item.copy}}</text></view>
+        <text class="radio">{{recommendationMode === item.value ? '●' : '○'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{recommendationMode === 'interest'}}" class="form-section">
+    <view class="section-heading"><text class="section-title">对什么感兴趣？</text><text class="section-note">{{selectedInterestCount}} / 5</text></view>
+    <view class="choice-wrap">
+      <view wx:for="{{interests}}" wx:key="value" class="choice-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="toggleInterest">{{item.label}}</view>
+    </view>
+    <view class="custom-interest-box">
+      <text class="custom-interest-label">没找到想玩的？自己加一个（直接提交也会自动带上）</text>
+      <view class="custom-interest-row">
+        <input class="interest-input" value="{{customInterestInput}}" maxlength="12" placeholder="例如：看赛车、逛花市" bindinput="changeCustomInterest" confirm-type="done" bindconfirm="addCustomInterest" />
+        <button class="add-interest-button" bindtap="addCustomInterest">添加</button>
+      </view>
+      <view wx:if="{{customInterests.length}}" class="custom-tag-wrap">
+        <view wx:for="{{customInterests}}" wx:key="*this" class="custom-tag" data-value="{{item}}" bindtap="removeCustomInterest">{{item}} <text>×</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">今天是什么心情？</text>
+    <scroll-view scroll-x class="mood-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="mood-row">
+        <view wx:for="{{moods}}" wx:key="value" class="mood-card {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectMood">
+          <image class="mood-image" src="{{item.imageUrl}}" mode="aspectFill" />
+          <view class="mood-label-row"><text>{{item.label}}</text><text wx:if="{{item.selected}}" class="mood-check">✓</text></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">愿意跑多远？</text>
+    <view wx:for="{{distanceOptions}}" wx:key="value" class="distance-row {{distance === item.value ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectDistance">
+      <view><text class="distance-label">{{item.label}}</text><text class="distance-copy">{{item.copy}}</text></view><text class="radio">{{distance === item.value ? '●' : '○'}}</text>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <text class="section-title">有什么一定不要？</text>
+    <view class="choice-wrap">
+      <view wx:for="{{dealbreakers}}" wx:key="value" class="choice-chip small {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="toggleDealbreaker">{{item.label}}</view>
+    </view>
+  </view>
+
+  <view class="sticky-actions"><button class="primary-button" bindtap="submit">看看适合我的活动</button></view>
+</view>

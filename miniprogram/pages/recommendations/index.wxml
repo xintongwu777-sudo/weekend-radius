@@ -1,0 +1,32 @@
+<view class="page recommendations-page">
+  <view class="recommendation-head">
+    <text class="eyebrow">{{dateText}}</text>
+    <view class="page-title">这几个，<text class="title-break">很适合今天</text></view>
+    <view class="summary-row"><text>{{summary}}</text><text class="edit-link" bindtap="editPreferences">修改</text></view>
+  </view>
+
+  <view wx:if="{{results.length}}" class="result-list">
+    <view wx:for="{{results}}" wx:key="id" class="event-card surface-card" data-id="{{item.activity.id}}" bindtap="openActivity">
+      <view class="image-wrap">
+        <image class="event-image" src="{{item.activity.imageUrl}}" mode="aspectFill" />
+        <view class="match-position"><match-badge score="{{item.totalScore}}" /></view>
+        <text wx:if="{{item.relaxed}}" class="relaxed-badge">已为你放宽一个条件</text>
+        <text class="source-badge {{item.activity.source.isMock ? 'mock-source' : 'verified-source'}}">{{item.activity.sourceLabel}}</text>
+      </view>
+      <view class="event-content">
+        <text class="event-category">{{item.activity.categoryLabel}} · {{item.activity.district}}</text>
+        <text class="event-title">{{item.activity.name}}</text>
+        <view class="event-meta"><text>{{item.activity.timeText}}</text><text>·</text><text>{{item.activity.priceText}}</text><text>·</text><text>约 {{item.activity.travelMinutesFromCenter}} 分钟</text></view>
+        <text wx:if="{{item.activity.reviewText}}" class="event-review">{{item.activity.reviewText}}</text>
+        <text class="event-reason">{{item.reason}}</text>
+        <view class="card-footer"><text>{{item.activity.venueName}}</text><text class="open-arrow">→</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state surface-card">
+    <text class="empty-title">这次条件有点严格</text>
+    <text class="empty-copy">{{emptyCopy}}</text>
+    <button class="secondary-button empty-action" bindtap="editPreferences">修改偏好</button>
+  </view>
+</view>

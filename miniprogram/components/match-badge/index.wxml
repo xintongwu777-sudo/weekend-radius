@@ -1,0 +1,1 @@
+<view class="match-badge"><text class="score">{{score}}</text><text class="label">推荐分</text></view>

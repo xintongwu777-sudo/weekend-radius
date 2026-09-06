@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "为你推荐",
+  "usingComponents": {
+    "match-badge": "/components/match-badge/index"
+  }
+}

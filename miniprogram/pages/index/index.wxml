@@ -1,0 +1,48 @@
+<view class="home">
+  <view class="hero">
+    <image class="hero-image" src="/assets/images/hero.svg" mode="aspectFill" />
+    <view class="hero-shade"></view>
+    <view class="brand-row">
+      <text class="brand">周末半径</text>
+      <view class="city-location {{locationReady ? 'location-ready' : ''}}" bindtap="selectLocation">
+        <text class="location-dot"></text>
+        <text class="city">广州 · {{locationLabel}}</text>
+      </view>
+    </view>
+    <view class="hero-copy">
+      <view class="hero-title">这周末<text class="title-break">想怎么玩？</text></view>
+      <text class="hero-subtitle">选一个心情，发现广州值得去的地方。</text>
+    </view>
+  </view>
+
+  <view class="home-content">
+    <button class="primary-button start-button" bindtap="startPlanning">开始规划 <text class="arrow">→</text></button>
+
+    <view class="location-hint" bindtap="selectLocation">
+      <text class="hint-icon">⌖</text>
+      <view><text class="hint-title">{{locationReady ? '已按你的出发位置计算距离' : '先定位，推荐会更准确'}}</text><text class="hint-copy">{{locationReady ? '点击可以重新定位或在地图上选点' : '只用于广州活动距离和附近地点推荐'}}</text></view>
+      <text class="hint-arrow">→</text>
+    </view>
+
+    <view wx:if="{{savedCard}}" class="saved-section">
+      <view class="section-row">
+        <text class="section-title">上次的周末</text>
+        <text class="section-link" bindtap="openSaved">查看计划</text>
+      </view>
+      <view class="saved-card surface-card" bindtap="openSaved">
+        <view>
+          <text class="saved-date">{{savedCard.dateText}}</text>
+          <text class="saved-title">{{savedCard.title}}</text>
+          <text class="saved-anchor">Anchor · {{savedCard.anchorName}}</text>
+        </view>
+        <text class="saved-cost">约 ¥{{savedCard.cost}}</text>
+      </view>
+    </view>
+
+    <view wx:else class="promise-row">
+      <view class="promise-item"><text class="promise-number">01</text><text>选偏好</text></view>
+      <view class="promise-item"><text class="promise-number">02</text><text>挑活动</text></view>
+      <view class="promise-item"><text class="promise-number">03</text><text>生成一天</text></view>
+    </view>
+  </view>
+</view>

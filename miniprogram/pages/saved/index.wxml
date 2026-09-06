@@ -1,0 +1,52 @@
+<view class="page saved-page">
+  <text class="eyebrow">YOUR WEEKENDS</text>
+  <view class="page-title">保存下来的<text class="title-break">广州周末</text></view>
+
+  <view wx:if="{{totalPlans}}">
+    <view wx:if="{{activePlans.length}}" class="plan-section">
+      <view class="section-heading"><text class="section-title">待完成</text><text class="section-count">{{activePlans.length}} 份计划</text></view>
+      <view class="saved-list">
+        <view wx:for="{{activePlans}}" wx:key="id" class="plan-card surface-card" data-id="{{item.id}}" bindtap="openPlan">
+          <view class="cover-wrap">
+            <image class="plan-cover" src="{{item.cover}}" mode="aspectFill" />
+            <text class="status-badge status-{{item.statusKey}}">{{item.statusLabel}}</text>
+          </view>
+          <view class="plan-content">
+            <text class="plan-date">{{item.dateText}}</text>
+            <text class="plan-title">{{item.title}}</text>
+            <text class="plan-anchor">Anchor · {{item.anchorName}}</text>
+            <view class="plan-meta"><text>¥{{item.summary.estimatedTotalCost}} 预计消费</text><text>{{item.nodes.length}} 个节点</text></view>
+            <view class="plan-actions"><text class="open-plan">查看计划 →</text><text class="delete-plan" data-id="{{item.id}}" data-title="{{item.title}}" catchtap="deletePlan">删除</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{completedPlans.length}}" class="plan-section completed-section">
+      <view class="section-heading"><text class="section-title">已完成</text><text class="section-count">{{completedPlans.length}} 份计划</text></view>
+      <view class="saved-list">
+        <view wx:for="{{completedPlans}}" wx:key="id" class="plan-card completed-card surface-card" data-id="{{item.id}}" bindtap="openPlan">
+          <view class="cover-wrap">
+            <image class="plan-cover completed-cover" src="{{item.cover}}" mode="aspectFill" />
+            <text class="status-badge status-completed">已完成</text>
+          </view>
+          <view class="plan-content">
+            <text class="plan-date completed-date">{{item.dateText}}</text>
+            <text class="plan-title">{{item.title}}</text>
+            <text class="plan-anchor">Anchor · {{item.anchorName}}</text>
+            <view class="plan-meta"><text>¥{{item.summary.estimatedTotalCost}} 预计消费</text><text>{{item.nodes.length}} 个节点</text></view>
+            <view class="plan-actions"><text class="open-plan">回看计划 →</text><text class="delete-plan" data-id="{{item.id}}" data-title="{{item.title}}" catchtap="deletePlan">删除</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button class="secondary-button new-button" bindtap="startPlanning">再规划一个周末</button>
+  </view>
+
+  <view wx:else class="empty-state surface-card">
+    <text class="empty-title">这里还没有计划</text>
+    <text class="empty-copy">完成一次周末规划并保存后，就能从这里再次打开。</text>
+    <button class="primary-button empty-action" bindtap="startPlanning">开始第一次规划</button>
+  </view>
+</view>

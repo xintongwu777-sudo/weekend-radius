@@ -1,0 +1,32 @@
+<view wx:if="{{activity}}" class="detail-page">
+  <view class="detail-hero">
+    <image class="detail-image" src="{{activity.imageUrl}}" mode="aspectFill" />
+    <view class="category-pill">{{activity.categoryLabel}}</view>
+  </view>
+  <view class="detail-content">
+    <text class="district">{{activity.district}} · {{activity.venueName}}</text>
+    <text class="detail-title">{{activity.name}}</text>
+    <view class="fact-grid">
+      <view class="fact"><text class="fact-label">DATE</text><text>{{activity.dateText}}</text></view>
+      <view class="fact"><text class="fact-label">{{activity.timeLabel}}</text><text>{{activity.timeText}}</text></view>
+      <view class="fact"><text class="fact-label">PRICE</text><text>{{activity.priceText}}</text></view>
+      <view class="fact"><text class="fact-label">TRAVEL</text><text>约 {{activity.travelMinutesFromCenter}} 分钟</text></view>
+    </view>
+
+    <view class="match-panel">
+      <view class="match-score"><text class="match-number">{{match.totalScore}}</text><text class="match-unit">推荐分</text></view>
+      <view><text wx:for="{{match.recommendationReasons}}" wx:key="*this" class="reason-line">· {{item}}</text></view>
+    </view>
+
+    <view class="article-section"><text class="article-title">关于这个活动</text><text class="article-copy">{{activity.description}}</text></view>
+    <view wx:if="{{activity.reviewText}}" class="article-section"><text class="article-title">口碑参考</text><text class="article-copy">{{activity.reviewText}}。评分和评论数来自地图地点信息，仅用于帮助排序，请以最新页面为准。</text></view>
+    <view class="article-section"><text class="article-title">地点</text><text class="article-copy">{{activity.venueName}}</text><text class="venue-address">{{activity.address}}</text><button class="map-button {{activity.isRealVenue ? '' : 'disabled-map'}}" bindtap="openVenueLocation">{{activity.isRealVenue ? '打开地图导航 →' : '演示地点不可导航'}}</button></view>
+    <view class="source-note {{activity.isRealVenue ? 'verified-note' : ''}}">
+      <text>{{activity.isRealVenue ? 'VERIFIED VENUE' : 'DEMO DATA'}}</text>
+      <text>信息来源：{{activity.source.name}}</text>
+      <text>{{activity.isRealVenue ? '场馆、地址和坐标已核对；当前时间是建议游览时段，并非某一场临时活动的固定开场时间。' : '当前为产品原型演示数据，不代表实时活动。'}}</text>
+      <text wx:if="{{activity.source.url}}" class="source-link" bindtap="copyOfficialSource">复制官方信息链接</text>
+    </view>
+  </view>
+  <view class="sticky-actions"><button class="primary-button" bindtap="chooseAnchor">围绕这个活动安排一天</button></view>
+</view>

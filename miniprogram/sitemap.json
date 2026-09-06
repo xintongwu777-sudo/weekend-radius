@@ -1,0 +1,4 @@
+{
+  "desc": "周末半径页面索引配置",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

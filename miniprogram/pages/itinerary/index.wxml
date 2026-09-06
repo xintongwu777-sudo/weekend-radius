@@ -1,0 +1,94 @@
+<view wx:if="{{plan}}" class="page itinerary-page">
+  <text class="eyebrow">{{plan.dateText}} · 广州</text>
+  <text class="page-title">{{plan.title}}</text>
+
+  <view class="summary-card surface-card">
+    <view class="summary-main"><text class="summary-time">{{plan.startText}}–{{plan.endText}}</text><text class="pace-pill">节奏 {{plan.paceText}}</text></view>
+    <view class="summary-grid">
+      <view><text class="summary-value">¥{{plan.summary.estimatedTotalCost}}</text><text class="summary-label">预计消费</text></view>
+      <view><text class="summary-value">{{plan.summary.totalTransportMinutes}} min</text><text class="summary-label">总交通</text></view>
+      <view><text class="summary-value">{{plan.nodes.length}} stops</text><text class="summary-label">行程节点</text></view>
+    </view>
+  </view>
+
+  <view class="timeline">
+    <view wx:if="{{plan.additionBefore}}" class="add-gap-card" data-id="{{plan.additionBefore.id}}" bindtap="openAdd">
+      <text class="add-gap-plus">＋</text>
+      <view class="add-gap-copy"><text class="add-gap-title">增加活动</text><text class="add-gap-meta">{{plan.additionBefore.timeText}} · 空出 {{plan.additionBefore.availableText}}</text></view>
+      <text class="add-gap-arrow">→</text>
+    </view>
+    <view wx:for="{{plan.nodes}}" wx:key="id" class="timeline-item">
+      <view wx:if="{{item.transportFromPrevious}}" class="transport-row">
+        <view class="time-empty"></view><view class="transport-line"><text>{{item.transportModeText}} {{item.transportFromPrevious.durationMinutes}} 分钟 · {{item.transportFromPrevious.distanceKm}} km</text></view>
+      </view>
+      <view class="node-row">
+        <view class="node-time"><text>{{item.startText}}</text><text class="end-time">{{item.endText}}</text></view>
+        <view class="timeline-rail"><view class="timeline-dot {{item.isAnchor ? 'anchor-dot' : ''}}"></view></view>
+        <view class="node-card {{item.isAnchor ? 'anchor-card' : ''}}">
+          <image class="node-image" src="{{item.imageUrl}}" mode="aspectFill" />
+          <view class="node-content">
+            <view class="node-top"><view class="node-category-row"><text class="node-category">{{item.isAnchor ? 'ANCHOR EVENT' : item.categoryLabel}}</text><text wx:if="{{item.source && !item.source.isMock}}" class="live-data-badge">实时地点</text></view><text class="node-cost">{{item.estimatedCost ? '约 ¥' + item.estimatedCost : '免费'}}</text></view>
+            <text class="node-name">{{item.name}}</text>
+            <text class="node-address">{{item.district}} · {{item.address}}</text>
+            <text wx:if="{{item.reviewText}}" class="node-review">{{item.reviewText}}</text>
+            <view wx:if="{{item.source && !item.source.isMock}}" class="node-navigation" data-id="{{item.id}}" bindtap="openNodeLocation">打开地图导航 →</view>
+            <text class="node-reason">{{item.recommendationReason}}</text>
+            <view wx:if="{{item.replaceable}}" class="replace-link" data-id="{{item.id}}" bindtap="openReplace">换一个 <text>↻</text></view>
+            <view wx:else class="anchor-lock">围绕这一站安排 · 不会被替换</view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{item.additionAfter}}" class="add-gap-card timeline-add" data-id="{{item.additionAfter.id}}" bindtap="openAdd">
+        <text class="add-gap-plus">＋</text>
+        <view class="add-gap-copy"><text class="add-gap-title">增加活动</text><text class="add-gap-meta">{{item.additionAfter.timeText}} · 空出 {{item.additionAfter.availableText}}</text></view>
+        <text class="add-gap-arrow">→</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="demo-note {{plan.placeDataMode === 'live' ? 'live-note' : ''}}">{{plan.placeDataMode === 'live' ? '餐厅、咖啡馆、公园等地点来自' + plan.placeSourceText + '；评分、费用与营业时间请在出发前再次确认。' : '当前计划由广州演示数据生成，时间、路线和预算仅用于产品原型。'}}</view>
+  <view class="sticky-actions"><button class="primary-button" bindtap="savePlan">{{plan.saved ? '已保存 · 再次保存' : '保存这份计划'}}</button></view>
+
+  <view wx:if="{{replaceOpen}}" class="sheet-mask" bindtap="closeReplace">
+    <view class="replace-sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <text class="sheet-eyebrow">REPLACE THIS STOP</text>
+      <text class="sheet-title">换掉“{{replacingNode.name}}”</text>
+      <text class="sheet-copy">只改这一站，Anchor Event 和其他安排会保留。</text>
+      <scroll-view scroll-y class="candidate-list">
+        <view wx:for="{{candidates}}" wx:key="place.id" class="candidate-card" data-id="{{item.place.id}}" bindtap="chooseCandidate">
+          <image class="candidate-image" src="{{item.place.imageUrl}}" mode="aspectFill" />
+          <view class="candidate-content">
+            <view class="candidate-top"><text class="candidate-tag">{{item.tag}}</text><text class="candidate-category">{{item.place.categoryLabel}}</text></view>
+            <text class="candidate-name">{{item.place.name}}</text>
+            <text wx:if="{{item.reviewText}}" class="candidate-review">{{item.reviewText}}</text>
+            <view class="candidate-deltas"><text>{{item.budgetText}}</text><text>{{item.transportText}}</text></view>
+          </view>
+        </view>
+        <view wx:if="{{!candidates.length}}" class="no-candidate">当前时间段没有更合适的候选项。</view>
+      </scroll-view>
+      <button class="skip-button" bindtap="skipCurrent">跳过这一站</button>
+    </view>
+  </view>
+
+  <view wx:if="{{addOpen}}" class="sheet-mask" bindtap="closeAdd">
+    <view class="replace-sheet" catchtap="noop">
+      <view class="sheet-handle"></view>
+      <text class="sheet-eyebrow">ADD TO YOUR DAY</text>
+      <text class="sheet-title">这个空档可以加一站</text>
+      <text class="sheet-copy">{{selectedSlot.timeText}} · 已按时间、路线和预算筛选。</text>
+      <scroll-view scroll-y class="candidate-list">
+        <view wx:for="{{addCandidates}}" wx:key="id" class="candidate-card" data-id="{{item.id}}" bindtap="chooseAddition">
+          <image class="candidate-image" src="{{item.place.imageUrl}}" mode="aspectFill" />
+          <view class="candidate-content">
+            <view class="candidate-top"><text class="candidate-tag">{{item.tag}}</text><text class="candidate-category">{{item.place.categoryLabel}}</text></view>
+            <text class="candidate-name">{{item.place.name}}</text>
+            <text wx:if="{{item.reviewText}}" class="candidate-review">{{item.reviewText}}</text>
+            <view class="candidate-deltas"><text>{{item.timeText}} · {{item.priceText}}</text><text>{{item.routeText}}</text></view>
+          </view>
+        </view>
+      </scroll-view>
+      <button class="skip-button" bindtap="closeAdd">暂时不加</button>
+    </view>
+  </view>
+</view>
